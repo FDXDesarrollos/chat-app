@@ -1,0 +1,46 @@
+<div class="card mx-4 my-4">
+    <div class="card-header">
+        <ul class="nav nav-pills card-header-pills">
+            <li class="nav-item mr-2" *ngIf="!conectado">
+                <input type="text" name="texto" [(ngModel)]="mensaje.usuario" class="form-control" placeholder="Tú usuario..." />
+            </li>            
+            <li class="nav-item mr-2">&nbsp;
+                <button type="button" class="btn btn-success" (click)="conectar()"
+                *ngIf="!conectado" [disabled]="!mensaje.usuario">Conectar</button>
+            </li>
+            <li class="nav-item">&nbsp;
+                <button type="button" class="btn btn-warning" (click)="desconectar()"
+                *ngIf="conectado">Desconectar</button>
+            </li>
+        </ul>
+    </div>
+
+    <div #scrollChat [scrollTop]="scrollChat.scrollHeight" class="card-body" style="overflow-y: scroll; height: 360px;" *ngIf="conectado">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-ligth" *ngFor="let mensaje of mensajes">
+                <span *ngIf="mensaje.tipo=='NUEVO_USUARIO'">
+                    {{mensaje.fecha | date:'shortTime'}} @ 
+                    <span [ngStyle]="{'color': mensaje.color}">{{mensaje.usuario}}</span> 
+                    {{mensaje.texto}}
+                </span>
+                <span *ngIf="mensaje.tipo=='MENSAJE'">
+                    {{mensaje.fecha | date:'shortTime'}} 
+                    <span [ngStyle]="{'color': mensaje.color}">{{mensaje.usuario}}</span> 
+                    dice:<br> {{mensaje.texto}}
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-footer" *ngIf="conectado">
+        <form class="form-inline">
+            <div class="form-group mb-2">
+                <input type="text" name="texto" class="form-control" placeholder="Escribe un mensaje..." 
+                [(ngModel)]="mensaje.texto"
+                (keyup)="escribndo()" />
+            </div>
+            <button type="submit" class="btn btn-primary mb-2" (click)="enviarMensaje()">Enviar</button>
+        </form>
+        <div>{{escribiendo}}</div>     
+    </div>
+</div>
